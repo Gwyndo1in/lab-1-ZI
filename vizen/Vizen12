@@ -1,0 +1,43 @@
+def encrypt_value(word: str):
+    return [value for i in range(len(word)) for value in d if word[i] == d[value]]
+
+
+def decrypt_value(cypher: list[int]):
+    return [d[value] for i in range(len(cypher)) for value in d if cypher[i] == value]
+
+
+def get_interval(value: list[int], key: list[int]):
+    len_key = len(key)
+    data = {}
+    iteration = 0
+
+    for index, item in enumerate(value, 0):
+        data[index] = (item, key[iteration])
+        iteration += 1
+        if iteration >= len_key:
+            iteration = 0
+    return data
+
+
+def encrypt(value: list[int], key: list[int]):
+    return [(v[0] + v[1]) % len(d) for v in get_interval(value, key).values()]  #
+
+
+def decrypt(item: list[int], key: list[int]):
+    return [(v[0] - v[1] + len(d)) % len(d) for v in get_interval(item, key).values()]  #
+
+
+def main():
+    word = input("Введите текст для зашифровки: ")
+    key = input("Введите ключ для зашифровки слова выше: ")
+
+    key_encoded = encrypt_value(key)
+    value_encoded = encrypt_value(word)
+    cypher = encrypt(value_encoded, key_encoded)
+    print('Cypher:', ''.join(decrypt_value(cypher)))
+    print('Word:', ''.join(decrypt_value(decrypt(cypher, key_encoded))))
+
+
+if __name__ == "__main__":
+    d = {index: chr(i) for index, i in enumerate(range(0, 127), 0)}  # a dictionary of characters that will participate in encryption
+    main()
