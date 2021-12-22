@@ -1,1 +1,36 @@
 
+EU = range(65, 91)
+RU = range(1040, 1072)
+
+
+def calculate(char: str, index: int):
+    orded = ord(char.upper())
+    locale = EU if orded in EU else RU
+    length = len(locale)
+    is_upper = char.isupper()
+
+    pos = orded + index
+
+    while pos > locale[-1]:
+        pos -= length
+    return chr(pos) if is_upper else chr(pos).lower()
+
+
+def encrypt(message: list[str], interval: int, text=None):
+    if text is None:
+        text = []
+    if len(message) == 0:
+        return text
+
+    text.append(''.join([calculate(char, interval) for char in message.pop(0)]))
+    return encrypt(message, interval, text)
+
+
+def main():
+    text = input("Введите текст для зашифровки: ").strip().split()
+    interval = int(input("Введите шаг шифровки: "))
+    print('Cypher:', ' '.join(encrypt(text, interval)))
+
+
+if __name__ == "__main__":
+    main()
